@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { StyledLink } from "./styled/components";
-import axios from "axios";
-import { StyledCard } from "./styled/components";
-import { MainBody } from "./styled/components";
+import {
+  addVisitedCountry,
+  initializeCountries,
+  initializeVisitedCountries,
+} from "../reducer/countryReducer";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {
+  StyledSpan,
+  MainBody,
+  StyledCard,
+  StyledLink,
+  StyledInput,
+} from "./styled/components";
+import Button from "react-bootstrap/Button";
 import millify from "millify";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const SingleCountry = ({ country }) => {
+  const dispatch = useDispatch();
   const languages = country.languages
     ? Object.values(country.languages).slice(0, 2).join(", ")
     : "no data";
@@ -14,44 +27,82 @@ const SingleCountry = ({ country }) => {
     : "no data";
   const population = country.population;
 
+  const addCountryVisit = () => {
+    dispatch(addVisitedCountry(country));
+  };
+
   return (
     <StyledCard>
       <StyledCard.Img src={country.flags.svg} alt="#" />
       <StyledCard.Body>
         <StyledCard.Title>{country.name.common}</StyledCard.Title>
-        <p>{country.name.official}</p>
+        <StyledCard.Title>{country.name.official}</StyledCard.Title>
         <StyledCard.Text>
-          <p>Languages: {languages}</p>
-          <p>Currencies: {currencies}</p>
-          <p>Population: {millify(population)}</p>
+          <StyledSpan>Languages: {languages}</StyledSpan>
+          <StyledSpan>Currencies: {currencies}</StyledSpan>
+          <StyledSpan>Population: {millify(population)}</StyledSpan>
         </StyledCard.Text>
-        <StyledCard.Link>
-          <StyledLink state={country} to={`/countries/${country.name.common}`}>
+        <Button>
+          <StyledLink state={country} to={`/countries/${country.cca3}`}>
             More
           </StyledLink>
-        </StyledCard.Link>
+        </Button>
       </StyledCard.Body>
+      <FavoriteBorderIcon
+        style={{ position: "absolute", bottom: "1rem", right: "1rem" }}
+        onClick={addCountryVisit}
+      />
     </StyledCard>
   );
 };
 
 const CountryList = () => {
-  const [countries, setCounties] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const dispatch = useDispatch();
+  const countries = useSelector((state) =>
+    window.location.href.slice(-9) === "countries"
+      ? state.countries.countries
+      : state.countries.visitedCountries
+  );
+
+  console.log(useParams());
 
   useEffect(() => {
-    axios
-      .get("https://restcountries.com/v3.1/all")
-      .then((res) => setCounties(res.data))
-      .catch((err) => {
-        console.log("error: ", err);
-      });
-  }, []);
+    dispatch(initializeCountries());
+
+    const visitedCountries = window.localStorage.getItem("visitedCountries");
+    if (visitedCountries) {
+      dispatch(
+        initializeVisitedCountries(Object.values(JSON.parse(visitedCountries)))
+      );
+    }
+  }, [dispatch]);
+
+  if (countries.length < 1) {
+    return <p>loading...</p>;
+  }
 
   return (
     <MainBody>
-      {countries.map((country) => {
-        return <SingleCountry key={country.name.common} country={country} />;
-      })}
+      <StyledInput
+        onChange={(e) => {
+          setSearchInput(e.target.value);
+        }}
+        placeholder="Search for a country"
+      />
+      {countries
+        .filter((country) => {
+          if (
+            country.name.common
+              .toLowerCase()
+              .includes(searchInput.toLowerCase())
+          ) {
+            return country;
+          }
+        })
+        .map((country) => {
+          return <SingleCountry key={country.name.common} country={country} />;
+        })}
     </MainBody>
   );
 };

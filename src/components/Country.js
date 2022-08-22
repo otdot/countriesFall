@@ -1,56 +1,95 @@
 import React, { useEffect, useState } from "react";
-import "dotenv/config";
-
-import { useLocation } from "react-router-dom";
 import Card from "react-bootstrap/Card";
-import { StyledImg } from "./styled/components";
+import Nav from "react-bootstrap/Nav";
+
+import { StyledImg, StyledLink, StyledSingleCard } from "./styled/components";
 import millify from "millify";
-import axios from "axios";
+import { useLocation, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { initializeWeather } from "../reducer/weatherReducer";
+import { setCountry } from "../reducer/countryReducer";
+import { LinkContainer } from "react-router-bootstrap";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 
 const Country = () => {
-  const [weather, setWeather] = useState({});
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const weather = useSelector(({ weather }) => weather);
   const location = useLocation();
-  const country = location.state;
-  const api_key = process.env.api_key;
-  console.log(process.env.api_key);
+  let country = useSelector(({ countries }) => countries.country);
 
-  // useEffect(() => {
-  //   setLoading(true);
+  let cca3;
+  if (location.state.cca3) {
+    cca3 = location.state.cca3;
+    country = location.state;
+  } else {
+    cca3 = location.state.border;
+  }
 
-  //   axios
-  //     .get(
-  //       `https://api.openweathermap.org/data/2.5/weather?q=${country.capital[0]}&appid=${api_key}
-  //   `
-  //     )
-  //     .then((res) => setWeather(res.data))
-  //     .then(() => setLoading(false))
-  //     .catch((err) => console.log("error: ", err));
-  // }, []);
+  console.log("cca3: ", cca3);
 
-  if (loading) {
+  const getCountry = useSelector(({ countries }) =>
+    countries.countries.find((singCountry) => singCountry.cca3 === cca3)
+  );
+
+  useEffect(() => {
+    dispatch(initializeWeather(getCountry.latlng.join("_")));
+    if (!country.name || getCountry.name.common !== country.name.common) {
+      dispatch(setCountry(getCountry));
+    }
+  }, [cca3]);
+
+  if (country.cca3 !== getCountry.cca3) {
     return <p>Loading</p>;
   }
 
+  console.log("getCountry: ", getCountry, "country: ", country);
+
   return (
-    <Card>
-      <StyledImg src={country.flags?.svg} alt="#" />
-      <div>
-        <Card.Title>{country.name?.common}</Card.Title>
-        <p>{country.name?.official}</p>
+    <StyledSingleCard>
+      <div className="image">
+        <StyledImg src={country.flags?.svg} alt="#" />
       </div>
-      <Card.Title>
-        Language(s): {country.languages && Object.values(country.languages)}
-      </Card.Title>
-      <Card.Title>
-        Currencie(s):
-        {country.currencies &&
-          Object.values(country.currencies).map((curr, i) => (
-            <span key={i}>{(i ? ", " : " ") + curr.name}</span>
-          ))}
-      </Card.Title>
-      <Card.Title>Population: {millify(country.population)}</Card.Title>
-    </Card>
+      <div className="content">
+        <div>
+          <Card.Title>{country.name?.common}</Card.Title>
+          <p>{country.name?.official}</p>
+        </div>
+        <Card.Title>
+          Language(s):{" "}
+          {country.languages && Object.values(country.languages).join(", ")}
+        </Card.Title>
+        <Card.Title>
+          Currencie(s):
+          {country.currencies &&
+            Object.values(country.currencies).map((curr, i) => (
+              <span key={i}>{(i ? ", " : " ") + curr.name}</span>
+            ))}
+        </Card.Title>
+        <Card.Title>Population: {millify(country.population)}</Card.Title>
+        {weather && (
+          <Card.Title>
+            Weather in {country.capital[0]}:{" "}
+            {(weather.main?.temp - 273.15).toFixed(1)}°C
+          </Card.Title>
+        )}
+        <Card.Title>Bordering countries: </Card.Title>
+        <div>
+          {country.borders
+            ? country.borders.map((border) => (
+                <LinkContainer
+                  key={border}
+                  state={{ border }}
+                  style={{ display: "inline-block", color: "black" }}
+                  to={`/countries/${border}`}
+                >
+                  <Nav.Link>{border}</Nav.Link>
+                </LinkContainer>
+              ))
+            : "No bordering countries"}
+          <FavoriteBorder />
+        </div>
+      </div>
+    </StyledSingleCard>
   );
 };
 
