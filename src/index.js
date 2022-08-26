@@ -6,11 +6,13 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import countryReducer from "./reducer/countryReducer";
 import weatherReducer from "./reducer/weatherReducer";
+import filterReducer from "./reducer/filterReducer";
 
 const store = configureStore({
   reducer: {
     countries: countryReducer,
     weather: weatherReducer,
+    filter: filterReducer,
   },
 });
 

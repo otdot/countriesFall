@@ -13,7 +13,9 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0",
+    "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.6",
+    "lodash": "^4.17.21",
     "millify": "^5.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
@@ -25,7 +27,8 @@
     "redux-thunk": "^2.4.1",
     "sass": "^1.54.4",
     "styled-components": "^5.3.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

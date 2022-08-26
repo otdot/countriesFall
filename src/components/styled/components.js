@@ -67,7 +67,7 @@ export const StyledSingleCard = styled(Card)`
   display: flex;
   flex-direction: row-reverse;
   position: absolute;
-  min-width: 50rem;
+  min-width: 60rem;
   top: 30%;
   left: 5%;
   width: 90vw;

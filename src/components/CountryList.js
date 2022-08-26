@@ -15,7 +15,8 @@ import {
 import Button from "react-bootstrap/Button";
 import millify from "millify";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { setFilter } from "../reducer/filterReducer";
+import countryService from "../services/countryService";
 
 const SingleCountry = ({ country }) => {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ const SingleCountry = ({ country }) => {
     ? Object.values(country.languages).slice(0, 2).join(", ")
     : "no data";
   const currencies = country.currencies
-    ? Object.values(country.currencies).map((curr) => curr.name)
+    ? Object.values(country.currencies)
+        .map((curr) => curr.name)
+        .join(", ")
     : "no data";
   const population = country.population;
 
@@ -59,13 +62,15 @@ const SingleCountry = ({ country }) => {
 const CountryList = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-  const countries = useSelector((state) =>
-    window.location.href.slice(-9) === "countries"
+  const filter = useSelector((state) => state.filter);
+  const countries = useSelector((state) => {
+    if (window.location.href.slice(-9) !== "countries") {
+      return state.countries.visitedCountries;
+    }
+    return state.filter === ""
       ? state.countries.countries
-      : state.countries.visitedCountries
-  );
-
-  console.log(useParams());
+      : countryService.filterCountries(state.filter, state.countries.countries);
+  });
 
   useEffect(() => {
     dispatch(initializeCountries());
@@ -78,7 +83,7 @@ const CountryList = () => {
     }
   }, [dispatch]);
 
-  if (countries.length < 1) {
+  if (countries.length < 1 && !filter) {
     return <p>loading...</p>;
   }
 
@@ -86,23 +91,17 @@ const CountryList = () => {
     <MainBody>
       <StyledInput
         onChange={(e) => {
-          setSearchInput(e.target.value);
+          dispatch(setFilter(e.target.value));
         }}
         placeholder="Search for a country"
       />
-      {countries
-        .filter((country) => {
-          if (
-            country.name.common
-              .toLowerCase()
-              .includes(searchInput.toLowerCase())
-          ) {
-            return country;
-          }
-        })
-        .map((country) => {
+      {countries.length > 0 ? (
+        countries.map((country) => {
           return <SingleCountry key={country.name.common} country={country} />;
-        })}
+        })
+      ) : (
+        <p>No results with these keywords</p>
+      )}
     </MainBody>
   );
 };
