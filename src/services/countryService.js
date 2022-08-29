@@ -1,5 +1,4 @@
 import axios from "axios";
-import lodash from "lodash";
 const baseUrl = "/api/countries";
 
 const getAll = async () => {

@@ -31,10 +31,11 @@ export const StyledFooter = styled.footer`
   justify-content: center;
   align-items: center;
   height: 8vh;
+  background: linear-gradient(to bottom, grey 1, white);
 `;
 
 export const StyledHero = styled.div`
-  max-height: 84vh;
+  max-height: 92vh;
   height: 50rem;
   min-height: 40rem;
   width: 100%;
@@ -112,6 +113,7 @@ export const StyledLink = styled(Link)`
     text-decoration: underline;
   }
 `;
+
 export const StyledSpan = styled.span`
   display: block;
 `;

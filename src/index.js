@@ -16,7 +16,7 @@ const store = configureStore({
   },
 });
 
-store.subscribe(() => console.log("countries", store.getState()));
+// store.subscribe(() => console.log("countries", store.getState()));
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

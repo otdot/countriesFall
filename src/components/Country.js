@@ -25,8 +25,6 @@ const Country = () => {
     cca3 = location.state.border;
   }
 
-  console.log("cca3: ", cca3);
-
   const getCountry = useSelector(({ countries }) =>
     countries.countries.find((singCountry) => singCountry.cca3 === cca3)
   );
@@ -41,8 +39,6 @@ const Country = () => {
   if (country.cca3 !== getCountry.cca3) {
     return <p>Loading</p>;
   }
-
-  console.log("getCountry: ", getCountry, "country: ", country);
 
   return (
     <StyledSingleCard>

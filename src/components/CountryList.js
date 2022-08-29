@@ -36,7 +36,11 @@ const SingleCountry = ({ country }) => {
 
   return (
     <StyledCard>
-      <StyledCard.Img src={country.flags.svg} alt="#" />
+      <StyledCard.Img
+        style={{ boxShadow: "0 2px 1px black" }}
+        src={country.flags.svg}
+        alt="#"
+      />
       <StyledCard.Body>
         <StyledCard.Title>{country.name.common}</StyledCard.Title>
         <StyledCard.Title>{country.name.official}</StyledCard.Title>
@@ -60,7 +64,6 @@ const SingleCountry = ({ country }) => {
 };
 
 const CountryList = () => {
-  const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
   const countries = useSelector((state) => {
