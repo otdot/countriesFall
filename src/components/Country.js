@@ -44,6 +44,7 @@ const Country = () => {
     <StyledSingleCard>
       <div className="image">
         <StyledImg src={country.flags?.svg} alt="#" />
+        <h1>test from countrycomponent</h1>
       </div>
       <div className="content">
         <div>

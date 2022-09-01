@@ -41,19 +41,3 @@ const filterCountries = (filter, countries) => {
 };
 
 export default { getAll, filterCountries };
-
-// else if (
-//   country.currencies &&
-//   Object.values(country.currencies).filter((curr) =>
-//     curr.name.toLowerCase().includes(filter)
-//   )
-// ) {
-//   return country;
-// } else if (
-//   country.languages &&
-//   Object.values(country.languages).filter((lang) =>
-//     lang.name.toLowerCase().includes(filter)
-//   )
-// ) {
-//   return country;
-// }
