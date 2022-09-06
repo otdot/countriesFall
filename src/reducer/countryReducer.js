@@ -16,6 +16,14 @@ const countryReducer = createSlice({
       return { ...state, country: action.payload };
     },
     addVisitedCountry(state, action) {
+      if (
+        state.visitedCountries.some(
+          (country) => country.name.common === action.payload.name.common
+        )
+      ) {
+        return state;
+      }
+
       const visited = {
         ...state.visitedCountries.concat(action.payload).reduce(
           (wholeObject, object) => ({
@@ -26,6 +34,7 @@ const countryReducer = createSlice({
         ),
       };
 
+      console.log(visited);
       window.localStorage.setItem("visitedCountries", JSON.stringify(visited));
       return {
         ...state,

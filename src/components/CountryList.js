@@ -4,22 +4,23 @@ import {
   initializeCountries,
   initializeVisitedCountries,
 } from "../reducer/countryReducer";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   StyledSpan,
   MainBody,
   StyledCard,
   StyledLink,
   StyledInput,
+  StyledHeart,
 } from "./styled/components";
 import Button from "react-bootstrap/Button";
 import millify from "millify";
 import { useSelector, useDispatch } from "react-redux";
 import { setFilter } from "../reducer/filterReducer";
 import countryService from "../services/countryService";
+import GlobalStyle from "./styled/globalStyles";
+import Heart from "./Heart";
 
 const SingleCountry = ({ country }) => {
-  const dispatch = useDispatch();
   const languages = country.languages
     ? Object.values(country.languages).slice(0, 2).join(", ")
     : "no data";
@@ -29,10 +30,6 @@ const SingleCountry = ({ country }) => {
         .join(", ")
     : "no data";
   const population = country.population;
-
-  const addCountryVisit = () => {
-    dispatch(addVisitedCountry(country));
-  };
 
   return (
     <StyledCard>
@@ -55,10 +52,7 @@ const SingleCountry = ({ country }) => {
           </StyledLink>
         </Button>
       </StyledCard.Body>
-      <FavoriteBorderIcon
-        style={{ position: "absolute", bottom: "1rem", right: "1rem" }}
-        onClick={addCountryVisit}
-      />
+      <Heart country={country} />
     </StyledCard>
   );
 };
@@ -87,11 +81,21 @@ const CountryList = () => {
   }, [dispatch]);
 
   if (countries.length < 1 && !filter) {
-    return <p>loading...</p>;
+    if (window.location.href.slice(-9) !== "countries") {
+      return (
+        <p>
+          It's time to travel.{" "}
+          <a href="https://www.skyscanner.com">Book a trip.</a>
+        </p>
+      );
+    } else {
+      return <p>Loading countries...</p>;
+    }
   }
 
   return (
     <MainBody>
+      <GlobalStyle />
       <StyledInput
         onChange={(e) => {
           dispatch(setFilter(e.target.value));

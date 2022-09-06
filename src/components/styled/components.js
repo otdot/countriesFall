@@ -1,9 +1,19 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import Layout from "../../pages/Layout";
 import NavBar from "react-bootstrap/NavBar";
 import Form from "react-bootstrap/Form";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
+export const StyledHeart = styled(FavoriteIcon)`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  height: 2rem;
+  width: 2rem;
+  font-size: large;
+`;
 
 export const StyledInput = styled(Form.Control)`
   display: flex;

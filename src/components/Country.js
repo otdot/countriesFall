@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
 
-import { StyledImg, StyledLink, StyledSingleCard } from "./styled/components";
+import { StyledImg, StyledSingleCard } from "./styled/components";
 import millify from "millify";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeWeather } from "../reducer/weatherReducer";
-import { setCountry } from "../reducer/countryReducer";
+import { addVisitedCountry, setCountry } from "../reducer/countryReducer";
 import { LinkContainer } from "react-router-bootstrap";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import Heart from "./Heart";
+import { blue } from "@mui/material/colors";
+import { Button } from "@mui/material";
 
 const Country = () => {
   const dispatch = useDispatch();
@@ -19,9 +21,11 @@ const Country = () => {
 
   let cca3;
   if (location.state.cca3) {
+    //i.e. when using more link
     cca3 = location.state.cca3;
     country = location.state;
   } else {
+    //i.e. when using border links
     cca3 = location.state.border;
   }
 
@@ -82,8 +86,10 @@ const Country = () => {
                 </LinkContainer>
               ))
             : "No bordering countries"}
-          <FavoriteBorder />
         </div>
+        <Button onClick={() => dispatch(addVisitedCountry(country))}>
+          I've been here
+        </Button>
       </div>
     </StyledSingleCard>
   );
