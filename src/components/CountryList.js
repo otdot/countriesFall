@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import {
   addOrRemoveVisitedCountry,
   initializeCountries,
+  removeVisited,
 } from "../reducer/countryReducer";
 import {
   StyledSpan,
@@ -31,9 +32,8 @@ const SingleCountry = ({ country }) => {
   const population = country.population;
   const visitPage = window.location.href.slice(-9) !== "countries";
 
-  const handleRemove = (country) => {
-    const remove = true;
-    dispatch(addOrRemoveVisitedCountry({ ...country, remove }));
+  const handleRemove = () => {
+    dispatch(removeVisited(country));
   };
 
   useEffect(() => {
@@ -62,9 +62,7 @@ const SingleCountry = ({ country }) => {
         </Button>
       </StyledCard.Body>
       {visitPage ? (
-        <RemoveButton onClick={() => handleRemove(country)}>
-          Remove
-        </RemoveButton>
+        <RemoveButton onClick={handleRemove}>Remove</RemoveButton>
       ) : (
         <Heart country={country} />
       )}
