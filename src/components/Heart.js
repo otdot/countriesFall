@@ -1,10 +1,12 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { addVisitedCountry } from "../reducer/countryReducer";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addOrRemoveVisitedCountry } from "../reducer/countryReducer";
+import countryService from "../services/countryService";
 import { StyledHeart } from "./styled/components";
 
 const Heart = ({ country }) => {
   const dispatch = useDispatch();
+  const state = useSelector((state) => state);
 
   const addCountryVisit = (e) => {
     const target = e.currentTarget;
@@ -12,8 +14,12 @@ const Heart = ({ country }) => {
     setTimeout(() => {
       target.classList.remove("animation");
     }, 2000);
-    dispatch(addVisitedCountry(country));
+    dispatch(addOrRemoveVisitedCountry(country));
   };
+
+  useEffect(() => {
+    countryService.updateLocalStorage(state);
+  }, [state]);
 
   return (
     <>

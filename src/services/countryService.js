@@ -7,7 +7,6 @@ const getAll = async () => {
 };
 
 const filterCountries = (filter, countries) => {
-  //capital[0], continets[0], Object.values(currencies).name <- array, region, name.common, name.official, subregion, Object.values(languages) <-- arra
   const result = countries.filter((country) => {
     if (country.name.common.toLowerCase().includes(filter)) {
       return country;
@@ -40,4 +39,18 @@ const filterCountries = (filter, countries) => {
   return result;
 };
 
-export default { getAll, filterCountries };
+const updateLocalStorage = (state) => {
+  const visited = {
+    ...state.countries.visitedCountries.reduce(
+      (wholeObject, object) => ({
+        ...wholeObject,
+        [object.name.common]: object,
+      }),
+      {}
+    ),
+  };
+
+  window.localStorage.setItem("visitedCountries", JSON.stringify(visited));
+};
+
+export default { getAll, filterCountries, updateLocalStorage };

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { update } from "lodash";
 import countryService from "../services/countryService";
 
 const countryReducer = createSlice({
@@ -16,48 +15,26 @@ const countryReducer = createSlice({
     setCountry(state, action) {
       return { ...state, country: action.payload };
     },
-    addVisitedCountry(state, action) {
-      let visited;
-      let updatedCountries;
-
+    addVisited(state, action) {
       if (
-        state.visitedCountries.every(
-          (country) => country.name.common !== action.payload.name.common
+        state.visitedCountries.some(
+          (country) => country.name.common === action.payload.name.common
         )
       ) {
-        updatedCountries = state.visitedCountries.concat(action.payload);
-
-        visited = {
-          ...updatedCountries.reduce(
-            (wholeObject, object) => ({
-              ...wholeObject,
-              [object.name.common]: object,
-            }),
-            {}
-          ),
-        };
-      } else {
-        if (!action.payload.remove) {
-          return state;
-        }
-        updatedCountries = state.visitedCountries.filter(
-          (c) => c.name.common !== action.payload.name.common
-        );
-        visited = {
-          ...updatedCountries.reduce((wholeObject, object) => {
-            console.log("removing country");
-            return {
-              ...wholeObject,
-              [object.name.common]: object,
-            };
-          }, {}),
-        };
+        return state;
       }
 
-      window.localStorage.setItem("visitedCountries", JSON.stringify(visited));
       return {
         ...state,
-        visitedCountries: updatedCountries,
+        visitedCountries: state.visitedCountries.concat(action.payload),
+      };
+    },
+    removeVisited(state, action) {
+      return {
+        ...state,
+        visitedCountries: state.visitedCountries.filter(
+          (c) => c.name.common !== action.payload.name.common
+        ),
       };
     },
     initializeVisitedCountries(state, action) {
@@ -69,14 +46,26 @@ const countryReducer = createSlice({
 export const {
   setCountries,
   setCountry,
-  addVisitedCountry,
   initializeVisitedCountries,
+  removeVisitedCountry,
+  addVisited,
+  removeVisited,
 } = countryReducer.actions;
 
 export const initializeCountries = () => {
   return async (dispatch) => {
     const countries = await countryService.getAll();
     dispatch(setCountries(countries));
+  };
+};
+
+export const addOrRemoveVisitedCountry = (country) => {
+  return (dispatch) => {
+    if (!country.remove) {
+      dispatch(addVisited(country));
+    } else {
+      dispatch(removeVisited(country));
+    }
   };
 };
 

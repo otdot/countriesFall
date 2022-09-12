@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {
-  addVisitedCountry,
+  addOrRemoveVisitedCountry,
   initializeCountries,
 } from "../reducer/countryReducer";
 import {
@@ -8,19 +8,18 @@ import {
   MainBody,
   StyledCard,
   StyledLink,
-  StyledInput,
   RemoveButton,
 } from "./styled/components";
 import Button from "react-bootstrap/Button";
 import millify from "millify";
 import { useSelector, useDispatch } from "react-redux";
-import { setFilter } from "../reducer/filterReducer";
 import countryService from "../services/countryService";
 import GlobalStyle from "./styled/globalStyles";
 import Heart from "./Heart";
 
 const SingleCountry = ({ country }) => {
   const dispatch = useDispatch();
+  const state = useSelector((state) => state);
   const languages = country.languages
     ? Object.values(country.languages).slice(0, 2).join(", ")
     : "no data";
@@ -30,12 +29,16 @@ const SingleCountry = ({ country }) => {
         .join(", ")
     : "no data";
   const population = country.population;
-  const visitedPage = window.location.href.slice(-9) !== "countries";
+  const visitPage = window.location.href.slice(-9) !== "countries";
 
   const handleRemove = (country) => {
     const remove = true;
-    dispatch(addVisitedCountry({ ...country, remove }));
+    dispatch(addOrRemoveVisitedCountry({ ...country, remove }));
   };
+
+  useEffect(() => {
+    countryService.updateLocalStorage(state);
+  }, [state]);
 
   return (
     <StyledCard>
@@ -58,7 +61,7 @@ const SingleCountry = ({ country }) => {
           </StyledLink>
         </Button>
       </StyledCard.Body>
-      {visitedPage ? (
+      {visitPage ? (
         <RemoveButton onClick={() => handleRemove(country)}>
           Remove
         </RemoveButton>
@@ -72,10 +75,8 @@ const SingleCountry = ({ country }) => {
 const CountryList = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
-  let clearVisited = false;
   const countries = useSelector((state) => {
     if (window.location.href.slice(-9) !== "countries") {
-      clearVisited = true;
       return state.countries.visitedCountries;
     }
     return state.filter === ""

@@ -7,7 +7,10 @@ import millify from "millify";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeWeather } from "../reducer/weatherReducer";
-import { addVisitedCountry, setCountry } from "../reducer/countryReducer";
+import {
+  addOrRemoveVisitedCountry,
+  setCountry,
+} from "../reducer/countryReducer";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button } from "@mui/material";
 
@@ -84,7 +87,7 @@ const Country = () => {
               ))
             : "No bordering countries"}
         </div>
-        <Button onClick={() => dispatch(addVisitedCountry(country))}>
+        <Button onClick={() => dispatch(addOrRemoveVisitedCountry(country))}>
           I've been here
         </Button>
       </div>
