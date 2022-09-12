@@ -1,10 +1,28 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import Layout from "../../pages/Layout";
 import NavBar from "react-bootstrap/NavBar";
 import Form from "react-bootstrap/Form";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Button from "react-bootstrap/Button";
+
+export const StyledClearButton = styled(Button)`
+  display: flex;
+  position: absolute;
+  bottom: 20%;
+  right: 0%;
+  transform: translate(-50%, -50%);
+  width: 13rem;
+  margin: 0 2rem;
+`;
+
+export const RemoveButton = styled(Button)`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 6rem;
+`;
 
 export const StyledHeart = styled(FavoriteIcon)`
   position: absolute;
@@ -16,11 +34,6 @@ export const StyledHeart = styled(FavoriteIcon)`
 `;
 
 export const StyledInput = styled(Form.Control)`
-  display: flex;
-  position: absolute;
-  bottom: 20%;
-  left: 20%;
-  transform: translate(-50%, -50%);
   width: 30rem;
   margin: 0 2rem;
 `;
@@ -49,7 +62,7 @@ export const StyledHero = styled.div`
   height: 50rem;
   min-height: 40rem;
   width: 100%;
-  background-image: url("http://source.unsplash.com/G_MCcG2YqPQ");
+  background-image: url("../../../assets/bgPic.jpg");
   background-attachment: fixed;
   background-position: center;
   background-size: cover;

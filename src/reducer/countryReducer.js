@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { update } from "lodash";
 import countryService from "../services/countryService";
 
 const countryReducer = createSlice({
@@ -16,29 +17,47 @@ const countryReducer = createSlice({
       return { ...state, country: action.payload };
     },
     addVisitedCountry(state, action) {
+      let visited;
+      let updatedCountries;
+
       if (
-        state.visitedCountries.some(
-          (country) => country.name.common === action.payload.name.common
+        state.visitedCountries.every(
+          (country) => country.name.common !== action.payload.name.common
         )
       ) {
-        return state;
+        updatedCountries = state.visitedCountries.concat(action.payload);
+
+        visited = {
+          ...updatedCountries.reduce(
+            (wholeObject, object) => ({
+              ...wholeObject,
+              [object.name.common]: object,
+            }),
+            {}
+          ),
+        };
+      } else {
+        if (!action.payload.remove) {
+          return state;
+        }
+        updatedCountries = state.visitedCountries.filter(
+          (c) => c.name.common !== action.payload.name.common
+        );
+        visited = {
+          ...updatedCountries.reduce((wholeObject, object) => {
+            console.log("removing country");
+            return {
+              ...wholeObject,
+              [object.name.common]: object,
+            };
+          }, {}),
+        };
       }
 
-      const visited = {
-        ...state.visitedCountries.concat(action.payload).reduce(
-          (wholeObject, object) => ({
-            ...wholeObject,
-            [object.name.common]: object,
-          }),
-          {}
-        ),
-      };
-
-      console.log(visited);
       window.localStorage.setItem("visitedCountries", JSON.stringify(visited));
       return {
         ...state,
-        visitedCountries: state.visitedCountries.concat(action.payload),
+        visitedCountries: updatedCountries,
       };
     },
     initializeVisitedCountries(state, action) {

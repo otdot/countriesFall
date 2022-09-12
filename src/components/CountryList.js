@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   addVisitedCountry,
   initializeCountries,
-  initializeVisitedCountries,
 } from "../reducer/countryReducer";
 import {
   StyledSpan,
@@ -10,7 +9,7 @@ import {
   StyledCard,
   StyledLink,
   StyledInput,
-  StyledHeart,
+  RemoveButton,
 } from "./styled/components";
 import Button from "react-bootstrap/Button";
 import millify from "millify";
@@ -21,6 +20,7 @@ import GlobalStyle from "./styled/globalStyles";
 import Heart from "./Heart";
 
 const SingleCountry = ({ country }) => {
+  const dispatch = useDispatch();
   const languages = country.languages
     ? Object.values(country.languages).slice(0, 2).join(", ")
     : "no data";
@@ -30,6 +30,12 @@ const SingleCountry = ({ country }) => {
         .join(", ")
     : "no data";
   const population = country.population;
+  const visitedPage = window.location.href.slice(-9) !== "countries";
+
+  const handleRemove = (country) => {
+    const remove = true;
+    dispatch(addVisitedCountry({ ...country, remove }));
+  };
 
   return (
     <StyledCard>
@@ -52,7 +58,13 @@ const SingleCountry = ({ country }) => {
           </StyledLink>
         </Button>
       </StyledCard.Body>
-      <Heart country={country} />
+      {visitedPage ? (
+        <RemoveButton onClick={() => handleRemove(country)}>
+          Remove
+        </RemoveButton>
+      ) : (
+        <Heart country={country} />
+      )}
     </StyledCard>
   );
 };
@@ -60,8 +72,10 @@ const SingleCountry = ({ country }) => {
 const CountryList = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
+  let clearVisited = false;
   const countries = useSelector((state) => {
     if (window.location.href.slice(-9) !== "countries") {
+      clearVisited = true;
       return state.countries.visitedCountries;
     }
     return state.filter === ""
@@ -71,13 +85,6 @@ const CountryList = () => {
 
   useEffect(() => {
     dispatch(initializeCountries());
-
-    const visitedCountries = window.localStorage.getItem("visitedCountries");
-    if (visitedCountries) {
-      dispatch(
-        initializeVisitedCountries(Object.values(JSON.parse(visitedCountries)))
-      );
-    }
   }, [dispatch]);
 
   if (countries.length < 1 && !filter) {
@@ -94,22 +101,20 @@ const CountryList = () => {
   }
 
   return (
-    <MainBody>
+    <>
       <GlobalStyle />
-      <StyledInput
-        onChange={(e) => {
-          dispatch(setFilter(e.target.value));
-        }}
-        placeholder="Search for a country"
-      />
-      {countries.length > 0 ? (
-        countries.map((country) => {
-          return <SingleCountry key={country.name.common} country={country} />;
-        })
-      ) : (
-        <p>No results with these keywords</p>
-      )}
-    </MainBody>
+      <MainBody>
+        {countries.length > 0 ? (
+          countries.map((country) => {
+            return (
+              <SingleCountry key={country.name.common} country={country} />
+            );
+          })
+        ) : (
+          <p>No results with these keywords</p>
+        )}
+      </MainBody>
+    </>
   );
 };
 

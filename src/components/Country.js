@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
 
@@ -9,8 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { initializeWeather } from "../reducer/weatherReducer";
 import { addVisitedCountry, setCountry } from "../reducer/countryReducer";
 import { LinkContainer } from "react-router-bootstrap";
-import Heart from "./Heart";
-import { blue } from "@mui/material/colors";
 import { Button } from "@mui/material";
 
 const Country = () => {
@@ -68,8 +66,7 @@ const Country = () => {
         <Card.Title>Population: {millify(country.population)}</Card.Title>
         {weather && (
           <Card.Title>
-            Weather in {country.capital[0]}:{" "}
-            {(weather.main?.temp - 273.15).toFixed(1)}°C
+            Weather in {country.capital[0]}: {(weather.main?.temp).toFixed(1)}°C
           </Card.Title>
         )}
         <Card.Title>Bordering countries: </Card.Title>
