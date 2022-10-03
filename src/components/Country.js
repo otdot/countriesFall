@@ -18,11 +18,12 @@ const Country = () => {
   let country = useSelector(({ countries }) => countries.country);
 
   let cca3;
-  if (location.state.cca3) {
+  if ("cca3" in location.state) {
     //i.e. when using more link
     cca3 = location.state.cca3;
     country = location.state;
-  } else {
+  }
+  if ("border" in location.state) {
     //i.e. when using border links
     cca3 = location.state.border;
   }
@@ -66,7 +67,7 @@ const Country = () => {
         <Card.Title>Population: {millify(country.population)}</Card.Title>
         {weather && (
           <Card.Title>
-            Weather in {country.capital[0]}: {(weather.main?.temp).toFixed(1)}°C
+            Weather in {country.capital[0]}: {weather.main?.temp.toFixed(0)}°C
           </Card.Title>
         )}
         <Card.Title>Bordering countries: </Card.Title>

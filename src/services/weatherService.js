@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "/api/weather";
+const baseUrl = "/.netlify/functions/api/weather";
 
 const getWeather = async (latlng) => {
   const weather = await axios.get(`${baseUrl}/${latlng}`);

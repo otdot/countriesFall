@@ -1,9 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  addOrRemoveVisitedCountry,
-  initializeCountries,
-  removeVisited,
-} from "../reducer/countryReducer";
+import { initializeCountries, removeVisited } from "../reducer/countryReducer";
 import {
   StyledSpan,
   MainBody,

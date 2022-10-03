@@ -59,14 +59,4 @@ export const initializeCountries = () => {
   };
 };
 
-export const addOrRemoveVisitedCountry = (country) => {
-  return (dispatch) => {
-    if (!country.remove) {
-      dispatch(addVisited(country));
-    } else {
-      dispatch(removeVisited(country));
-    }
-  };
-};
-
 export default countryReducer.reducer;

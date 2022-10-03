@@ -36,6 +36,12 @@ export const StyledHeart = styled(FavoriteIcon)`
 export const StyledInput = styled(Form.Control)`
   width: 30rem;
   margin: 0 2rem;
+
+  @media (max-width: 600px) {
+    position: absolute;
+    top: 5rem;
+    width: 70vw;
+  } ;
 `;
 
 export const StyledHome = styled.div`
@@ -81,10 +87,21 @@ export const StyledNavbar = styled(NavBar)`
 
 export const MainBody = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   align-items: center;
   grid-auto-flow: row;
+
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
+  } ;
 `;
 
 export const StyledSingleCard = styled(Card)`
