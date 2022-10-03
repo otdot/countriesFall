@@ -1,5 +1,10 @@
 import axios from "axios";
-const baseUrl = "/.netlify/functions/api/countries";
+
+//Change baseUrl depending where the website is being used.
+//in netlify:
+// const baseUrl = "/.netlify/functions/api/countries";
+//locally:
+const baseUrl = "/api/countries";
 
 const getAll = async () => {
   const res = await axios.get(baseUrl);
