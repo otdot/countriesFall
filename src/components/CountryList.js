@@ -14,7 +14,7 @@ import countryService from "../services/countryService";
 import GlobalStyle from "./styled/globalStyles";
 import Heart from "./Heart";
 
-const SingleCountry = ({ country }) => {
+export const SingleCountry = ({ country }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
   const languages = country.languages
