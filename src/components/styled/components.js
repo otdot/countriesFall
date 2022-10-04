@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import Layout from "../../pages/Layout";
-import NavBar from "react-bootstrap/NavBar";
+import NavBar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Button from "react-bootstrap/Button";
